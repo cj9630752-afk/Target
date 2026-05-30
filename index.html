@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Target Special Promotion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #CC0000; --red-dark: #A50000;
+      --bg: #F5F5F5; --white: #FFFFFF;
+      --text: #1A1A1A; --muted: #666666; --green: #2E7D32;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex; justify-content: center; align-items: flex-start;
+      padding: 24px 16px 40px;
+    }
+    .card {
+      background: var(--white);
+      border-radius: 20px; max-width: 400px; width: 100%;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      animation: fadeUp 0.5s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* BANNER */
+    .banner {
+      background: #fff;
+      padding: 20px 24px 16px;
+      text-align: center;
+      border-bottom: 3px solid var(--red);
+    }
+    .banner img { height: 90px; width: auto; display: block; margin: 0 auto 8px; }
+    .promo-label {
+      font-size: 15px; font-weight: 700;
+      color: var(--text); letter-spacing: 0.3px;
+    }
+
+    /* Claimed bar */
+    .claimed-bar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 20px;
+      background: #fafafa; border-bottom: 1px solid #eee;
+    }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: #e0e0e0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0; overflow: hidden;
+    }
+    .claimed-info { flex: 1; }
+    .claimed-name { font-weight: 700; font-size: 14px; color: var(--red); }
+    .claimed-sub  { font-size: 12px; color: var(--muted); }
+    .live-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #4CAF50;
+      box-shadow: 0 0 0 3px rgba(76,175,80,0.2);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 3px rgba(76,175,80,0.2); }
+      50%      { box-shadow: 0 0 0 6px rgba(76,175,80,0.05); }
+    }
+
+    /* Reward block */
+    .reward-block {
+      margin: 22px 24px 0;
+      padding: 22px 20px; text-align: center;
+    }
+    .reward-eyebrow {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .reward-amount {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 72px; color: var(--red); line-height: 1;
+    }
+    .reward-sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+    /* Steps */
+    .steps { padding: 26px 24px 18px; display: flex; flex-direction: column; gap: 15px; }
+    .step { display: flex; align-items: center; gap: 14px; }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--red); color: var(--white);
+      font-weight: 700; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-text { font-size: 15px; font-weight: 500; color: var(--text); }
+
+    /* Stats */
+    .stats { display: flex; padding: 0 24px 22px; align-items: center; }
+    .stat { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); }
+    .stat span { color: var(--green); }
+    .stat-divider { width: 1px; height: 20px; background: #ddd; margin: 0 16px; }
+    .live-stat { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--text); }
+    .live-dot-sm { width: 8px; height: 8px; border-radius: 50%; background: #4CAF50; animation: pulse 1.5s infinite; }
+
+    /* CTA */
+    .cta-wrap { padding: 0 24px 22px; }
+    .cta-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 18px;
+      background: var(--red); color: var(--white);
+      border: none; border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cta-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
+    .cta-btn:active { transform: translateY(0); }
+
+    .fine-print { text-align: center; font-size: 11px; color: #aaa; padding: 0 24px 20px; }
+    .fine-print a { color: #aaa; text-decoration: underline; }
+
+    /* Toast popup */
+    .toast {
+      position: fixed;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+      min-width: 280px; max-width: 340px;
+      z-index: 9999;
+      border-left: 4px solid var(--red);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), opacity 0.35s ease;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .toast-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .toast-info { flex: 1; }
+    .toast-name { font-weight: 700; font-size: 13px; color: var(--red); }
+    .toast-sub  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .toast-dot  {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #4CAF50;
+      box-shadow: 0 0 0 3px rgba(76,175,80,0.2);
+      animation: pulse 1.5s infinite; flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- BANNER with logo -->
+  <div class="banner">
+    <img id="logo" src="data:image/png;base64,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" alt="Target" />
+    <div class="promo-label">Target Special Promotion</div>
+  </div>
+
+  <!-- Reward -->
+  <div class="reward-block">
+    <div class="reward-eyebrow">Exclusive Reward</div>
+    <div class="reward-amount">$500</div>
+    <div class="reward-sub">Participating stores</div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-text">Click button below</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-text">Enter basic info</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-text">Complete 4–6 deals or more</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-text">Get $500 reward</div></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><span>$51,220</span> claimed</div>
+    <div class="stat-divider"></div>
+    <div class="live-stat">
+      <div class="live-dot-sm"></div>
+      <strong>42</strong>&nbsp;viewing now
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <a class="cta-btn" href="https://giftclick.org/aff_c?offer_id=2746&aff_id=174894" target="_blank">
+      GET STARTED &nbsp;→
+    </a>
+  </div>
+
+  <div class="fine-print">Limited time offer &bull; <a href="#">Terms apply</a></div>
+
+</div>
+
+<!-- Toast popup -->
+<div class="toast" id="toast">
+  <div class="toast-avatar" id="toastAv">DK</div>
+  <div class="toast-info">
+    <div class="toast-name" id="toastName">David K. claimed $500</div>
+    <div class="toast-sub"  id="toastSub">Miami, FL &bull; 3m ago</div>
+  </div>
+  <div class="toast-dot"></div>
+</div>
+
+<script>
+  const entries = [
+    { name: "David K.",   city: "Miami, FL",       mins: 3,  initials: "DK" },
+    { name: "Ashley M.",  city: "Houston, TX",      mins: 5,  initials: "AM" },
+    { name: "Marcus T.",  city: "Chicago, IL",      mins: 2,  initials: "MT" },
+    { name: "Brianna L.", city: "Atlanta, GA",      mins: 7,  initials: "BL" },
+    { name: "James R.",   city: "Phoenix, AZ",      mins: 1,  initials: "JR" },
+    { name: "Keisha W.",  city: "Detroit, MI",      mins: 4,  initials: "KW" },
+    { name: "Tyler S.",   city: "Dallas, TX",       mins: 6,  initials: "TS" },
+    { name: "Monique H.", city: "Las Vegas, NV",    mins: 2,  initials: "MH" },
+    { name: "Carlos V.",  city: "Los Angeles, CA",  mins: 8,  initials: "CV" },
+    { name: "Amber N.",   city: "Charlotte, NC",    mins: 3,  initials: "AN" },
+  ];
+  const colors = ["#CC0000","#1976D2","#388E3C","#F57C00","#7B1FA2","#0097A7"];
+  let idx = 0;
+  let hideTimer;
+
+  function showToast() {
+    const e = entries[idx % entries.length];
+    const col = colors[idx % colors.length];
+    const toast = document.getElementById('toast');
+
+    document.getElementById('toastName').textContent = e.name + " claimed $500";
+    document.getElementById('toastSub').innerHTML = e.city + " &bull; " + e.mins + "m ago";
+    const av = document.getElementById('toastAv');
+    av.textContent = e.initials;
+    av.style.background = col;
+
+    // Show
+    toast.classList.add('show');
+    clearTimeout(hideTimer);
+
+    // Hide after 3s
+    hideTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+
+    idx++;
+  }
+
+  // First popup after 2s, then every 5s
+  setTimeout(() => {
+    showToast();
+    setInterval(showToast, 5000);
+  }, 2000);
+</script>
+</body>
+</html>
